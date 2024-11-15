@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Detail - Car Management</title>
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+<header>
+    <h1>Car Details</h1>
+    <nav>
+        <a href="car-list.html">Back to List</a> |
+        <a href="index.html">Home</a>
+    </nav>
+</header>
+
+<main>
+    <div id="carDetail">
+        <!-- Car details will be populated here -->
+    </div>
+</main>
+
+<footer>
+    <p>&copy; 2024 Car Management Application</p>
+</footer>
+
+<script>
+    const token = localStorage.getItem('token');
+    if (!token) {
+        window.location.href = 'login.html';
+    }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const carId = urlParams.get('id');
+
+    fetch(`http://localhost:5000/api/cars/${carId}`, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
+    .then(response => response.json())
+    .then(car => {
+        const carDetail = document.getElementById('carDetail');
+        carDetail.innerHTML = `
+            <h2>${car.title}</h2>
+            <p>${car.description}</p>
+            <p><strong>Tags:</strong> ${car.tags.join(', ')}</p>
+            <p><strong>Images:</strong></p>
+            <div>${car.images.map(img => `<img src="${img}" alt="${car.title}" style="width: 200px; height: 150px; margin-right: 10px;">`).join('')}</div>
+        `;
+    });
+</script>
+</body>
+</html>

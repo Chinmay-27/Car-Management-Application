@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Car Management</title>
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+<header>
+    <h1>Login to Car Management</h1>
+    <nav>
+        <a href="index.html">Home</a> |
+        <a href="signup.html">Sign Up</a>
+    </nav>
+</header>
+
+<main>
+    <form id="loginForm">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+
+        <button type="submit">Login</button>
+    </form>
+</main>
+
+<footer>
+    <p>&copy; 2024 Car Management Application</p>
+</footer>
+
+<script>
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        fetch('http://localhost:5000/api/auth/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.token) {
+                localStorage.setItem('token', data.token);
+                window.location.href = 'car-list.html';
+            } else {
+                alert('Invalid credentials');
+            }
+        });
+    });
+</script>
+</body>
+</html>

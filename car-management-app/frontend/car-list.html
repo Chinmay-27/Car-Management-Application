@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car List - Car Management</title>
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+<header>
+    <h1>Your Cars</h1>
+    <nav>
+        <a href="index.html">Home</a> |
+        <a href="add-car.html">Add New Car</a> |
+        <a href="logout.html" id="logout">Logout</a>
+    </nav>
+</header>
+
+<main>
+    <div id="carList">
+        <!-- Car list will be populated here -->
+    </div>
+</main>
+
+<footer>
+    <p>&copy; 2024 Car Management Application</p>
+</footer>
+
+<script>
+    const token = localStorage.getItem('token');
+    if (!token) {
+        window.location.href = 'login.html';
+    }
+
+    fetch('http://localhost:5000/api/cars', {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        const carList = document.getElementById('carList');
+        data.forEach(car => {
+            const carDiv = document.createElement('div');
+            carDiv.innerHTML = `
+                <h3>${car.title}</h3>
+                <p>${car.description}</p>
+                <a href="car-detail.html?id=${car._id}">View Details</a>
+            `;
+            carList.appendChild(carDiv);
+        });
+    });
+</script>
+</body>
+</html>
